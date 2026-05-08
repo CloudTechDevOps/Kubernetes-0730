@@ -1,7 +1,7 @@
 # Kubernetes API version being used for this resource
 apiVersion: apps/v1
 # Type of Kubernetes resource - Deployment manages ReplicaSets and provides declarative updates
-kind: deployment
+kind: Deployment
 # Metadata section contains information about the Deployment
 metadata:
   # Name of the Deployment
