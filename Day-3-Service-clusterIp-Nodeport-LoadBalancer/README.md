@@ -104,7 +104,6 @@ spec:
 ```
 #### NodePort Advantages ✅
 - **Simple External Access**: Direct access via node IP and port
-- **No Cloud Dependency**: Works on any Kubernetes cluster (bare metal, on-premises)
 - **Easy Testing**: Quick way to expose applications for development
 - **Port Predictability**: Can specify exact port numbers
 
@@ -112,14 +111,11 @@ spec:
 - **Limited Ports**: Only 2768 ports available (30000-32767)
 - **Security Concerns**: Opens ports on all nodes, potential attack vector
 - **Load Balancing**: No intelligent load balancing, just round-robin
-- **Node Dependencies**: Service availability depends on node reachability
 - **Firewall Management**: Requires opening ports on all nodes
 
 #### NodePort Use Cases
 - **Development Environments**: Quick access for testing and debugging
-- **On-Premises Clusters**: When cloud load balancers aren't available
 - **Temporary Exposure**: Short-term external access needs
-- **Legacy Applications**: Migrating apps that expect direct port access
 
 ### 3.3 LoadBalancer Service (Cloud-Native External Access)
 
@@ -154,7 +150,6 @@ spec:
 #### LoadBalancer Advantages ✅
 - **Production Ready**: Designed for high-traffic production workloads
 - **Intelligent Balancing**: Advanced load balancing algorithms
-- **Auto-Scaling**: Handles traffic spikes and pod lifecycle changes
 - **Health Monitoring**: Automatic pod health checking and failover
 - **Cloud Integration**: Native integration with cloud provider features
 
@@ -162,10 +157,6 @@ spec:
 - **Cloud Dependent**: Only works on supported cloud platforms
 - **Cost**: Load balancers incur additional cloud costs
 - **Provisioning Time**: May take time to provision external resources
-- **Limited Control**: Less control over load balancing behavior
-- **Vendor Lock-in**: Tied to specific cloud provider implementations
-
-
 
 ## 🌐 How Services Work Across Nodes (Cross-Node Architecture)
 
