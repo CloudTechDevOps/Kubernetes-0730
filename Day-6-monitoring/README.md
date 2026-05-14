@@ -912,6 +912,908 @@ Recommended setup:
 * Slack alerts
 
 ---
+# Grafana Dashboard Queries using Prometheus
+
+# Overview
+
+This document contains commonly used PromQL queries for creating Grafana dashboards using Prometheus datasource.
+
+These queries help monitor:
+
+* Kubernetes cluster health
+* CPU usage
+* Memory usage
+* Disk usage
+* Pod metrics
+* Node metrics
+* Network traffic
+* Application performance
+* API server health
+* HPA metrics
+
+---
+
+# Architecture
+
+Applications → Prometheus → Grafana Dashboards
+
+---
+
+# What is Prometheus?
+
+Prometheus is an open-source monitoring and alerting system.
+
+Responsibilities:
+
+* Collects metrics
+* Stores time-series data
+* Supports PromQL queries
+* Monitors Kubernetes workloads
+
+---
+
+# What is Grafana?
+
+Grafana is an open-source visualization platform.
+
+Responsibilities:
+
+* Creates dashboards
+* Visualizes Prometheus metrics
+* Generates alerts
+* Monitors infrastructure and applications
+
+---
+
+# What is PromQL?
+
+PromQL stands for:
+
+```text
+Prometheus Query Language
+```
+
+Used to:
+
+* Query metrics
+* Analyze resource usage
+* Create alerts
+* Build dashboards
+
+---
+
+# Prerequisites
+
+Before using these queries ensure:
+
+* Prometheus installed
+* Grafana installed
+* Prometheus datasource configured in Grafana
+* kube-prometheus-stack installed
+
+---
+
+# Add Prometheus Datasource in Grafana
+
+Inside Grafana:
+
+1. Go to Settings
+2. Click Data Sources
+3. Add Data Source
+4. Select Prometheus
+5. Enter Prometheus URL
+6. Save & Test
+
+---
+
+# Dashboard Creation Steps
+
+# Step 1: Create Dashboard
+
+Inside Grafana:
+
+* Dashboards
+* New Dashboard
+* Add Visualization
+
+---
+
+# Step 2: Select Datasource
+
+Choose:
+
+```text
+Prometheus
+```
+
+---
+
+# Step 3: Add Query
+
+Paste PromQL query.
+
+---
+
+# Step 4: Select Visualization
+
+Examples:
+
+* Time Series
+* Gauge
+* Table
+* Stat
+* Bar Gauge
+
+---
+
+# Step 5: Save Dashboard
+
+Provide:
+
+* Dashboard name
+* Folder
+* Description
+
+---
+
+# CPU Monitoring Queries
+
+# Total CPU Usage Percentage
+
+## Query
+
+```promql
+100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+```
+
+## Purpose
+
+Shows overall CPU utilization percentage.
+
+## Recommended Visualization
+
+* Gauge
+* Time Series
+
+---
+
+# CPU Usage by Namespace
+
+## Query
+
+```promql
+sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (namespace)
+```
+
+## Purpose
+
+Shows CPU usage grouped by namespace.
+
+## Recommended Visualization
+
+* Bar Chart
+* Time Series
+
+---
+
+# CPU Usage by Pod
+
+## Query
+
+```promql
+sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod)
+```
+
+## Purpose
+
+Displays CPU usage for each pod.
+
+---
+
+# Node CPU Core Count
+
+## Query
+
+```promql
+count(count(node_cpu_seconds_total) by (cpu))
+```
+
+## Purpose
+
+Shows total CPU cores in node.
+
+---
+
+# Memory Monitoring Queries
+
+# Total Memory Usage Percentage
+
+## Query
+
+```promql
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+```
+
+## Purpose
+
+Shows memory usage percentage.
+
+## Recommended Visualization
+
+* Gauge
+* Stat
+
+---
+
+# Memory Usage by Namespace
+
+## Query
+
+```promql
+sum(container_memory_usage_bytes{container!=""}) by (namespace)
+```
+
+## Purpose
+
+Displays namespace memory consumption.
+
+---
+
+# Memory Usage by Pod
+
+## Query
+
+```promql
+sum(container_memory_usage_bytes{container!=""}) by (pod)
+```
+
+## Purpose
+
+Displays pod memory consumption.
+
+---
+
+# Disk Monitoring Queries
+
+# Filesystem Usage Percentage
+
+## Query
+
+```promql
+(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100
+```
+
+## Purpose
+
+Displays disk usage percentage.
+
+---
+
+# Available Disk Space
+
+## Query
+
+```promql
+node_filesystem_avail_bytes
+```
+
+## Purpose
+
+Shows available filesystem space.
+
+---
+
+# Network Monitoring Queries
+
+# Network Receive Traffic
+
+## Query
+
+```promql
+rate(node_network_receive_bytes_total[5m])
+```
+
+## Purpose
+
+Displays incoming network traffic.
+
+---
+
+# Network Transmit Traffic
+
+## Query
+
+```promql
+rate(node_network_transmit_bytes_total[5m])
+```
+
+## Purpose
+
+Displays outgoing network traffic.
+
+---
+
+# Pod Network Receive
+
+## Query
+
+```promql
+sum(rate(container_network_receive_bytes_total[5m])) by (pod)
+```
+
+## Purpose
+
+Displays pod receive bandwidth.
+
+---
+
+# Pod Network Transmit
+
+## Query
+
+```promql
+sum(rate(container_network_transmit_bytes_total[5m])) by (pod)
+```
+
+## Purpose
+
+Displays pod transmit bandwidth.
+
+---
+
+# Kubernetes Pod Monitoring Queries
+
+# Running Pods Count
+
+## Query
+
+```promql
+count(kube_pod_status_phase{phase="Running"})
+```
+
+## Purpose
+
+Shows number of running pods.
+
+---
+
+# Failed Pods Count
+
+## Query
+
+```promql
+count(kube_pod_status_phase{phase="Failed"})
+```
+
+## Purpose
+
+Displays failed pod count.
+
+---
+
+# Pending Pods Count
+
+## Query
+
+```promql
+count(kube_pod_status_phase{phase="Pending"})
+```
+
+## Purpose
+
+Displays pending pod count.
+
+---
+
+# Pod Restart Count
+
+## Query
+
+```promql
+sum(rate(kube_pod_container_status_restarts_total[5m]))
+```
+
+## Purpose
+
+Shows pod restart frequency.
+
+---
+
+# Namespace Pod Count
+
+## Query
+
+```promql
+count by(namespace)(kube_pod_info)
+```
+
+## Purpose
+
+Shows number of pods per namespace.
+
+---
+
+# Kubernetes Node Monitoring Queries
+
+# Node Ready Status
+
+## Query
+
+```promql
+kube_node_status_condition{condition="Ready",status="true"}
+```
+
+## Purpose
+
+Shows node health status.
+
+---
+
+# Total Kubernetes Nodes
+
+## Query
+
+```promql
+count(kube_node_info)
+```
+
+## Purpose
+
+Displays total cluster nodes.
+
+---
+
+# Node Load Average
+
+## Query
+
+```promql
+node_load1
+```
+
+## Purpose
+
+Displays node load average.
+
+---
+
+# Kubernetes Deployment Monitoring
+
+# Deployment Replicas
+
+## Query
+
+```promql
+kube_deployment_status_replicas
+```
+
+## Purpose
+
+Displays deployment replica count.
+
+---
+
+# HPA Current Replicas
+
+## Query
+
+```promql
+kube_horizontalpodautoscaler_status_current_replicas
+```
+
+## Purpose
+
+Displays current HPA replicas.
+
+---
+
+# HPA Maximum Replicas
+
+## Query
+
+```promql
+kube_horizontalpodautoscaler_spec_max_replicas
+```
+
+## Purpose
+
+Displays HPA maximum replicas.
+
+---
+
+# Container Monitoring Queries
+
+# Container CPU Usage
+
+## Query
+
+```promql
+sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod)
+```
+
+## Purpose
+
+Displays pod-level CPU consumption.
+
+---
+
+# Container Memory Usage
+
+## Query
+
+```promql
+sum(container_memory_usage_bytes{container!=""}) by (pod)
+```
+
+## Purpose
+
+Displays pod-level memory usage.
+
+---
+
+# Pod CPU Limits
+
+## Query
+
+```promql
+sum(container_spec_cpu_quota/container_spec_cpu_period) by (pod)
+```
+
+## Purpose
+
+Shows configured CPU limits.
+
+---
+
+# Pod Memory Limits
+
+## Query
+
+```promql
+sum(container_spec_memory_limit_bytes) by (pod)
+```
+
+## Purpose
+
+Shows configured memory limits.
+
+---
+
+# API Server Monitoring Queries
+
+# API Server Request Rate
+
+## Query
+
+```promql
+rate(apiserver_request_total[5m])
+```
+
+## Purpose
+
+Displays Kubernetes API request rate.
+
+---
+
+# API Server Error Rate
+
+## Query
+
+```promql
+rate(apiserver_request_total{code=~"5.."}[5m])
+```
+
+## Purpose
+
+Displays Kubernetes API server errors.
+
+---
+
+# Application Monitoring Queries
+
+# HTTP Request Rate
+
+## Query
+
+```promql
+rate(http_requests_total[5m])
+```
+
+## Purpose
+
+Displays incoming HTTP request rate.
+
+---
+
+# Application Error Rate
+
+## Query
+
+```promql
+rate(http_requests_total{status=~"5.."}[5m])
+```
+
+## Purpose
+
+Displays application 5xx errors.
+
+---
+
+# Recommended Grafana Panels
+
+| Monitoring Area | Recommended Panel |
+| --------------- | ----------------- |
+| CPU Usage       | Gauge             |
+| Memory Usage    | Gauge             |
+| Disk Usage      | Gauge             |
+| Network Traffic | Time Series       |
+| Pod Count       | Stat              |
+| Error Rate      | Time Series       |
+| Node Status     | Table             |
+| HPA Metrics     | Bar Gauge         |
+
+---
+
+# Alert Queries
+
+# High CPU Alert
+
+## Query
+
+```promql
+100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+```
+
+## Purpose
+
+Triggers alert when CPU exceeds 90%.
+
+---
+
+# High Memory Alert
+
+## Query
+
+```promql
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+```
+
+## Purpose
+
+Triggers alert when memory exceeds 85%.
+
+---
+
+# Pod Restart Alert
+
+## Query
+
+```promql
+increase(kube_pod_container_status_restarts_total[5m]) > 3
+```
+
+## Purpose
+
+Triggers alert when pod restarts frequently.
+
+---
+
+# Node Down Alert
+
+## Query
+
+```promql
+up == 0
+```
+
+## Purpose
+
+Triggers alert when node becomes unavailable.
+
+---
+
+# Dashboard Organization Best Practices
+
+## Create Separate Dashboards
+
+Recommended dashboards:
+
+* Cluster Monitoring
+* Node Monitoring
+* Pod Monitoring
+* Application Monitoring
+* Network Monitoring
+* Security Monitoring
+
+---
+
+# Use Variables
+
+Grafana variables help dynamically filter:
+
+* Namespace
+* Pod
+* Node
+* Cluster
+
+---
+
+# Configure Refresh Interval
+
+Recommended:
+
+```text
+30 seconds
+```
+
+---
+
+# Enable Alerting
+
+Configure alerts for:
+
+* High CPU
+* High Memory
+* Pod Failures
+* Node Down
+* Disk Full
+
+---
+
+# Common Dashboard IDs
+
+# Kubernetes Cluster Monitoring
+
+## Dashboard ID
+
+```text
+315
+```
+
+---
+
+# Node Exporter Full
+
+## Dashboard ID
+
+```text
+1860
+```
+
+---
+
+# Kubernetes Pod Monitoring
+
+## Dashboard ID
+
+```text
+6417
+```
+
+---
+
+# Kubernetes Cluster Prometheus
+
+## Dashboard ID
+
+```text
+7249
+```
+
+---
+
+# Docker Monitoring
+
+## Dashboard ID
+
+```text
+193
+```
+
+---
+
+# Import Existing Dashboard
+
+Inside Grafana:
+
+1. Dashboards
+2. Import
+3. Enter Dashboard ID
+4. Select Datasource
+5. Import
+
+---
+
+# Troubleshooting
+
+# No Data in Panels
+
+Check:
+
+* Prometheus datasource
+* Query syntax
+* Prometheus targets
+
+---
+
+# Prometheus Targets Down
+
+Open:
+
+```text
+http://PROMETHEUS-IP:9090/targets
+```
+
+---
+
+# Missing Metrics
+
+Verify:
+
+* kube-state-metrics
+* node-exporter
+* cAdvisor
+
+---
+
+# Dashboard Loading Slow
+
+Reduce:
+
+* Query complexity
+* Time range
+* Refresh interval
+
+---
+
+# Best Practices
+
+## Use Labels Properly
+
+Use:
+
+* namespace
+* pod
+* instance
+* container
+
+---
+
+## Group Related Panels
+
+Example:
+
+* CPU section
+* Memory section
+* Network section
+
+---
+
+## Use Alerts Carefully
+
+Avoid unnecessary alerts.
+
+---
+
+## Use Proper Retention
+
+Configure Prometheus retention policy.
+
+---
+
+# Production Recommendations
+
+Recommended setup:
+
+* Prometheus Operator
+* kube-prometheus-stack
+* Persistent storage
+* Alertmanager
+* PagerDuty integration
+* TLS enabled Grafana
+
+---
+
 
 # Advantages of this Setup
 
