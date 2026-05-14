@@ -289,7 +289,7 @@ Recommended for cloud environments.
 
 ---
 
-# Step 7: Expose Prometheus using LoadBalancer
+# Step 7: Expose Prometheus using LoadBalancer or NodePort
 
 Edit Prometheus service:
 
@@ -433,7 +433,7 @@ Popular dashboard IDs:
 
 | Dashboard                     | ID   |
 | ----------------------------- | ---- |
-| Kubernetes Cluster Monitoring | 315  |
+| Kubernetes Cluster Monitoring | 15757  |
 | Node Exporter Full            | 1860 |
 | Kubernetes Pods Monitoring    | 6417 |
 
@@ -515,42 +515,8 @@ You can monitor:
 
 ---
 
-# Alternative Deployment Methods
-
-## Method 1: Manual YAML Configuration
-
-Create all manifests manually:
-
-* Deployments
-* ConfigMaps
-* Services
-* StatefulSets
 
 Then apply in order.
-
----
-
-## Method 2: Prometheus Operator
-
-Prometheus Operator automates:
-
-* Prometheus deployment
-* Monitoring configuration
-* Alerting rules
-* Service discovery
-
----
-
-## Method 3: Helm Chart
-
-Recommended method.
-
-Benefits:
-
-* Easy setup
-* Faster deployment
-* Production ready
-* Standardized configuration
 
 ---
 
