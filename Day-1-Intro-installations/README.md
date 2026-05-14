@@ -343,9 +343,9 @@ In Kubernetes, a HorizontalPodAutoscaler automatically updates a workload resour
 Horizontal scaling means that the response to increased load is to deploy more Pods. This is different from vertical scaling, which for Kubernetes would mean assigning more resources (for example: memory or CPU) to the Pods that are already running for the workload.
 
 If the load decreases, and the number of Pods is above the configured minimum, the HorizontalPodAutoscaler instructs the workload resource (the Deployment, StatefulSet, or other similar resource) to scale back down.
-
+<!--
 > 📁 GitHub link for HPA files: https://github.com/CloudTechDevOps/Kubernetes/tree/main/day-4-horizonalScaling
-
+-->
 ### Cluster Autoscaler Setup
 
 ```bash
@@ -401,9 +401,9 @@ kubectl create namespace ingress-nginx  # create namespace for ingress-nginx
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.1/deploy/static/provider/cloud/deploy.yaml
 # to install ingress controller yaml
 ```
-
+<!--
 > 📁 GitHub link for ingress files: https://github.com/CloudTechDevOps/Kubernetes/tree/main/day-5-ingress
-
+-->
 **Steps:**
 1. Create deployment file for path-1
 2. Create deployment file for path-2
@@ -2050,7 +2050,7 @@ When it comes to log management in Kubernetes, the EFK stack stands out as a rob
 
 > Please click the below GitHub link for all YAML files:
 >
-> ➡️ [https://github.com/CloudTechDevOps/Kubernetes](https://github.com/CloudTechDevOps/Kubernetes)
+> ➡️ [https://github.com/CloudTechDevOps/](https://github.com/CloudTechDevOps/)
 
 ---
 
