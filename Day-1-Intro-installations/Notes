@@ -27,7 +27,7 @@ Provides an API that serves as the front end of a Kubernetes control plane. It i
 ## Scheduler :------ 
 This component is responsible for scheduling pods on specific nodes according to automated workflows and user defined conditions, which can include resource requests
 
-## ETCDDD :-----
+## ETCD :-----
 A key-value database that contains data about your cluster state and configuration. Etcd is fault tolerant and distributed.
 
 ## Controller:-----
