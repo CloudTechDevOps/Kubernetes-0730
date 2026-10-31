@@ -193,7 +193,7 @@ Kubernetes (kubelet)
      ↓
   containerd → runc
 
-# Below after 1.24 version 
+#  after 1.24 version 
 
 Kubernetes (kubelet)
      ↓
