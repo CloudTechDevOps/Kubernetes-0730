@@ -1,0 +1,5 @@
+kubectl cordon <node name>  
+kubectl cordon ip-10-0-4-153.ec2.internal  
+
+  # no pod schedule on this node until uncordon
+  # we prefer this process while cluster upgrade time ---> not allow any further deployment until complete cluster upgrade 
