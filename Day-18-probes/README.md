@@ -312,35 +312,62 @@ livenessProbe:
 ## probes.yaml
 
 ```yaml
-apiVersion: v1
-kind: Pod
+
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: probe-demo
 spec:
-  containers:
-    - name: nginx
-      image: nginx
+  replicas: 1
+  selector:
+    matchLabels:
+      app: probe-demo
+  template:
+    metadata:
+      labels:
+        app: probe-demo
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 
-      startupProbe:
-        httpGet:
-          path: /
-          port: 80
-        failureThreshold: 30
-        periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10
 
-      readinessProbe:
-        httpGet:
-          path: /
-          port: 80
-        initialDelaySeconds: 5
-        periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
 
-      livenessProbe:
-        httpGet:
-          path: /
-          port: 80
-        initialDelaySeconds: 15
-        periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 5
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: probe-demo-service
+spec:
+  type: ClusterIP
+  selector:
+    app: probe-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
 ```
 
 Apply:
