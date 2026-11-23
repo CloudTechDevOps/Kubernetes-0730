@@ -482,5 +482,5 @@ startupProbe fail -> restart container
 readinessProbe fail -> stop traffic only
 livenessProbe fail -> restart container
 continuous restart -> CrashLoopBackOff
----
+```
 
