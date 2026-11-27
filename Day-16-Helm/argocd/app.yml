@@ -1,21 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-
 metadata:
-  name: project-1
+  name: my-helm-app
   namespace: argocd
 
 spec:
   project: default
 
   source:
-    repoURL: https://github.com/<YOUR_GITHUB_USERNAME>/project-1.git
+    repoURL: https://github.com/your-org/my-repo.git
     targetRevision: main
-    path: .
+    path: helm-chart
+
+    helm:
+      releaseName: myapp
+      valueFiles:
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: myapp
 
   syncPolicy:
     automated:
